@@ -15,15 +15,7 @@ type GetSourceCodeData = {
 
 export type GetContractData = {
   IsContract: boolean
-  ContractName: string
   Verified: boolean
-  OpenSource: boolean
-}
-
-type GetCodeData = {
-  ContractName: string
-  Verified: boolean
-  Code: string
 }
 
 const API_TIMEOUT = 5000
@@ -139,10 +131,48 @@ async function _isContract(
   }
 }
 
+export async function isVerified(
+  address: string,
+  network: Network
+): Promise<Result<boolean>> {
+  try {
+    const { data } = await axios.get(
+      `https://${config[network].scanDomain}/api`,
+      {
+        params: {
+          module: 'contract',
+          action: 'getsourcecode',
+          address,
+          apikey: config[network].apiKey,
+        },
+        timeout: API_TIMEOUT,
+      }
+    )
+    if (data.status === '0') {
+      return {
+        error: {
+          message: `[${data.message}] ${data.result}`,
+        },
+      }
+    }
+    let result = data.result[0] as GetSourceCodeData
+    return {
+      data: result.ABI !== 'Contract source code not verified',
+    }
+  } catch (error: any) {
+    console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+    return {
+      error: {
+        message: 'unknown error',
+      },
+    }
+  }
+}
+
 export async function getCode(
   address: string,
   network: Network
-): Promise<Result<GetCodeData>> {
+): Promise<Result<string>> {
   try {
     const { data } = await axios.get(
       `https://${config[network].scanDomain}/api`,
@@ -168,11 +198,7 @@ export async function getCode(
     // it is the implementation
     if (result.Proxy === '0' || result.Implementation === address) {
       return {
-        data: {
-          ContractName: result.ContractName,
-          Verified: result.ABI !== 'Contract source code not verified',
-          Code: parseSourceCode(result.SourceCode),
-        },
+        data: parseSourceCode(result.SourceCode),
       }
     }
 
@@ -192,20 +218,18 @@ export async function getContract(
   address: string,
   network: Network
 ): Promise<Result<GetContractData>> {
-  const getCodeResult = await getCode(address, network)
-  if (getCodeResult.error) {
+  const isVerifiedResult = await isVerified(address, network)
+  if (isVerifiedResult.error) {
     return {
       error: {
-        message: getCodeResult.error.message,
+        message: isVerifiedResult.error.message,
       },
     }
   }
   return {
     data: {
       IsContract: true,
-      ContractName: getCodeResult.data.ContractName,
-      Verified: getCodeResult.data.Verified,
-      OpenSource: getCodeResult.data.Code !== '',
+      Verified: isVerifiedResult.data,
     },
   }
 }

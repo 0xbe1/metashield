@@ -89,11 +89,15 @@ const Answer = ({
   }
   return (
     <div className="flex flex-row justify-around text-purple-600">
-      <div>Contract {result.data.IsContract ? '✅' : '❌'}</div>
-      <div>Verified {result.data.Verified ? '✅' : '❌'}</div>
       <div>
-        Open-sourced {result.data.OpenSource ? '✅' : '❌'}{' '}
-        {result.data.OpenSource && (
+        Contract {result.data.IsContract ? '✅' : '❌'}{' '}
+        {result.data.IsContract && (
+          <a href={`https://etherscan.io/address/${address}`}>🔗</a>
+        )}
+      </div>
+      <div>
+        Verified {result.data.Verified ? '✅' : '❌'}{' '}
+        {result.data.Verified && (
           <a href={`/api/code?network=${network}&address=${address}`}>🔗</a>
         )}
       </div>
@@ -155,10 +159,7 @@ const Home: NextPage = () => {
         <div className="w-full">
           <div className=" text-center">
             <p className="text-6xl font-bold text-purple-600">MetaShield</p>
-            <p className="mt-5 text-xl">
-              Keep you <span className="font-bold text-purple-600">safe</span>{' '}
-              in web3
-            </p>
+            <p className="mt-5 text-xl">Your 🛡️ in the Wild Web</p>
           </div>
           {/* <Select
             placeholder={'Select network'}

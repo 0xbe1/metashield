@@ -13,7 +13,7 @@ export default async function handler(
   if (getCodeResult.error) {
     res.status(200).send(getCodeResult.error)
   } else {
-    let code = getCodeResult.data.Code
+    let code = getCodeResult.data
     res.status(200).send(code)
   }
 }

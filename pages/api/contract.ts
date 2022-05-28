@@ -21,9 +21,7 @@ export default async function handler(
     res.status(200).send({
       data: {
         IsContract: false,
-        ContractName: '',
         Verified: false,
-        OpenSource: false,
       },
     })
     return
