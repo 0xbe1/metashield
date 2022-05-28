@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import Select from 'react-select'
+// import Select from 'react-select'
 import { GetContractData } from './api/utils'
 
 export type Result<T> =
@@ -110,7 +110,8 @@ const Home: NextPage = () => {
     }
   }, [])
 
-  const [network, setNetwork] = useState<Network | null>(null)
+  // const [network, setNetwork] = useState<Network | null>(null)
+  const network = 'ethereum'
   const [address, setAddress] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<Result<GetContractData> | null>(null)
@@ -159,7 +160,7 @@ const Home: NextPage = () => {
               in web3
             </p>
           </div>
-          <Select
+          {/* <Select
             placeholder={'Select network'}
             className="basic-single my-5 text-center"
             classNamePrefix="select"
@@ -170,7 +171,7 @@ const Home: NextPage = () => {
                 setNetwork(selected.value)
               }
             }}
-          />
+          /> */}
           <input
             type="text"
             className="form-control relative my-4 block w-full min-w-0 flex-auto rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-center text-base font-normal text-gray-700 transition ease-in-out focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none"
