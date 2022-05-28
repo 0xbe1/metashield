@@ -88,18 +88,29 @@ const Answer = ({
     return <p>{result.error.message} ❌</p>
   }
   return (
-    <div className="flex flex-row justify-around text-purple-600">
-      <div>
-        Contract {result.data.IsContract ? '✅' : '❌'}{' '}
-        {result.data.IsContract && (
-          <a href={`https://etherscan.io/address/${address}`}>🔗</a>
-        )}
+    <div>
+      <div className="flex flex-row justify-around text-purple-600">
+        <div>
+          Contract {result.data.IsContract ? '✅' : '❌'}{' '}
+          {result.data.IsContract && (
+            <a href={`https://etherscan.io/address/${address}`}>🔗</a>
+          )}
+        </div>
+        <div>
+          Verified {result.data.Verified ? '✅' : '❌'}{' '}
+          {result.data.Verified && (
+            <a href={`/api/code?network=${network}&address=${address}`}>🔗</a>
+          )}
+        </div>
       </div>
-      <div>
-        Verified {result.data.Verified ? '✅' : '❌'}{' '}
-        {result.data.Verified && (
-          <a href={`/api/code?network=${network}&address=${address}`}>🔗</a>
-        )}
+      <div className="mt-5 px-5 text-left text-sm">
+        <p>
+          Contract: A contract address rather than an externally owned accounts.
+        </p>
+        <p>
+          Verified: A verified contract on Etherscan is considered to made open
+          source.
+        </p>
       </div>
     </div>
   )
