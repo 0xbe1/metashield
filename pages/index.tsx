@@ -89,15 +89,12 @@ const Answer = ({
   }
   return (
     <div className="flex flex-row justify-around text-purple-600">
+      <div>Contract {result.data.IsContract ? '✅' : '❌'}</div>
       <div>Verified {result.data.Verified ? '✅' : '❌'}</div>
       <div>
         Open-sourced {result.data.OpenSource ? '✅' : '❌'}{' '}
         {result.data.OpenSource && (
-          <a
-            href={`/api/code?network=${network}&address=${address}`}
-          >
-            🔗
-          </a>
+          <a href={`/api/code?network=${network}&address=${address}`}>🔗</a>
         )}
       </div>
     </div>
