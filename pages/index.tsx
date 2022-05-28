@@ -187,7 +187,7 @@ const Home: NextPage = () => {
           <input
             type="text"
             className="form-control relative my-4 block w-full min-w-0 flex-auto rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-center text-base font-normal text-gray-700 transition ease-in-out focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none"
-            placeholder="contract address"
+            placeholder="address"
             aria-label="Search"
             aria-describedby="button-addon2"
             value={address}
