@@ -14,6 +14,7 @@ type GetSourceCodeData = {
 }
 
 export type GetContractData = {
+  IsContract: boolean
   ContractName: string
   Verified: boolean
   OpenSource: boolean
@@ -82,6 +83,62 @@ export const config: Config = {
   },
 }
 
+export async function isContract(
+  address: string,
+  network: Network
+): Promise<Result<boolean>> {
+  let isContractResult = await _isContract(address, network, 'txlist')
+  if (
+    isContractResult.error &&
+    isContractResult.error.message === 'No transactions found'
+  ) {
+    return _isContract(address, network, 'txlistinternal')
+  }
+  return isContractResult
+}
+
+async function _isContract(
+  address: string,
+  network: Network,
+  action: 'txlist' | 'txlistinternal'
+): Promise<Result<boolean>> {
+  try {
+    const { data } = await axios.get(
+      `https://${config[network].scanDomain}/api`,
+      {
+        params: {
+          module: 'account',
+          action,
+          address,
+          startblock: 0,
+          endblock: 99999999,
+          page: 1,
+          offset: 1,
+          sort: 'asc',
+          apikey: config[network].apiKey,
+        },
+        timeout: API_TIMEOUT,
+      }
+    )
+    if (data.status === '1') {
+      // contract creation txn
+      return { data: data.result[0].to === '' }
+    }
+    return {
+      error: {
+        message: `[${data.message}] ${data.result}`,
+      },
+    }
+  } catch (error: any) {
+    console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+    return {
+      error: {
+        message: 'unknown error',
+      },
+    }
+  }
+}
+
 export async function getCode(
   address: string,
   network: Network
@@ -109,7 +166,7 @@ export async function getCode(
     let result = data.result[0] as GetSourceCodeData
 
     // it is the implementation
-    if (result.Proxy === '0') {
+    if (result.Proxy === '0' || result.Implementation === address) {
       return {
         data: {
           ContractName: result.ContractName,
@@ -145,6 +202,7 @@ export async function getContract(
   }
   return {
     data: {
+      IsContract: true,
       ContractName: getCodeResult.data.ContractName,
       Verified: getCodeResult.data.Verified,
       OpenSource: getCodeResult.data.Code !== '',
