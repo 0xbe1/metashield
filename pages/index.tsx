@@ -147,14 +147,14 @@ const Home: NextPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center font-mono">
       <Head>
-        <title>mask^2</title>
+        <title>MetaShield</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="flex w-full flex-1 items-center sm:w-4/5 lg:w-1/2">
         <div className="w-full">
           <div className=" text-center">
-            <p className="text-6xl font-bold text-purple-600">mask^2</p>
+            <p className="text-6xl font-bold text-purple-600">MetaShield</p>
             <p className="mt-5 text-xl">
               Keep you <span className="font-bold text-purple-600">safe</span>{' '}
               in web3
